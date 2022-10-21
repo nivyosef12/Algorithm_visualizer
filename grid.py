@@ -124,3 +124,6 @@ class Node:
 
     def update_neighbors(self, neighbors):
         self.neighbors = neighbors
+
+    def get_neighbors(self):
+        return self.neighbors
