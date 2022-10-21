@@ -45,7 +45,10 @@ class Grid:
         row = x // self.node_width
         col = y // self.node_width
 
-        return row, col
+        return col, row
+
+    def get_node(self, row, col):
+        return self.grid[row][col]
 
 
 class Node:
@@ -102,3 +105,6 @@ class Node:
 
     def update_neighbors(self):
         pass
+
+    def print_(self):
+        print(self.width)
