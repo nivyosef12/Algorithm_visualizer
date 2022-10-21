@@ -95,7 +95,11 @@ class Node:
     def is_end(self):
         return self.color == BLUE
 
-    # def reset
+    def is_available(self):
+        return self.color == WHITE
+
+    def reset(self):
+        self.color = WHITE
 
     def make_close(self):
         self.color = RED
