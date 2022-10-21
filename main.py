@@ -3,11 +3,18 @@
 
 import pygame
 from grid import Grid
+from pathAlgorithms import PathAlgorithm
 
 WIDTH = 800
 ROWS = 50
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("path finding algorithm")
+
+
+def h(p1, p2):
+    dx = abs(p1[0] - p2[0])
+    dy = abs(p1[1] - p2[1])
+    return dx + dy
 
 
 def main():
@@ -47,13 +54,20 @@ def main():
                 elif node != start_node and node != end_node:
                     node.make_barrier()
 
-            elif pygame.mouse.get_pressed()[2]: # right click
+            elif pygame.mouse.get_pressed()[2]:  # right click
                 # feature for changing start and end position
                 continue
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not started:
                     started = True
+                    for row in grid.grid:
+                        for node in row:
+                            grid.update_neighbors(node.row, node.col)
+
+                    algorithm = PathAlgorithm(grid.grid, lambda: grid.draw(WIN), start_node, end_node)
+                    algorithm.a_star(h)
+
     pygame.quit()
 
 
