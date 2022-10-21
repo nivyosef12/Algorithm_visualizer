@@ -14,13 +14,13 @@ PURPLE = (128, 0, 128)
 class Grid:
     def __init__(self, rows, width):
         self.width = width  # width of the entire grid
-        self.rows = rows  # num of rows
+        self.num_of_rows = rows  # num of rows
         self.grid = []
         self.node_width = width // rows
         for i in range(rows):
             self.grid.append([])
             for j in range(rows):
-                node = Node(i, j, self.node_width, rows)
+                node = Node(i, j, self.node_width)
                 self.grid[i].append(node)
 
     def draw(self, win):
@@ -31,28 +31,44 @@ class Grid:
             for node in row:
                 node.draw(win)
 
-        for i in range(self.rows):
+        for i in range(self.num_of_rows):
             # horizontal lines
             pygame.draw.line(win, GRAY, (0, i * self.node_width), (self.width, i * self.node_width))
-            for j in range(self.rows):
+            for j in range(self.num_of_rows):
                 # vertical lines
                 pygame.draw.line(win, GRAY, (j * self.node_width, 0), (j * self.node_width, self.width))
 
         pygame.display.update()
 
     def get_clicked_pos(self, pos):
-        y, x = pos
+        x, y = pos
         row = x // self.node_width
         col = y // self.node_width
 
-        return col, row
+        return row, col
 
     def get_node(self, row, col):
         return self.grid[row][col]
 
+    def update_neighbors(self, row, col):
+        neighbors = []
+        if row < self.num_of_rows - 1 and not self.grid[row + 1][col].is_barrier():  # right
+            neighbors.append(self.grid[row + 1][col])
+
+        if row > 0 and not self.grid[row - 1][col].is_barrier():  # left
+            neighbors.append(self.grid[row - 1][col])
+
+        if col < self.num_of_rows - 1 and not self.grid[row][col + 1].is_barrier():  # up
+            neighbors.append(self.grid[row][col + 1])
+
+        if col > 0 and not self.grid[row][col - 1].is_barrier():  # down
+            neighbors.append(self.grid[row][col - 1])
+
+        self.grid[row][col].update_neighbors(neighbors)
+
 
 class Node:
-    def __init__(self, row, col, width, total_rows):
+    def __init__(self, row, col, width):
         self.row = row
         self.col = col
         self.width = width
@@ -60,7 +76,6 @@ class Node:
         self.y = col * width
         self.color = WHITE
         self.neighbors = []
-        self.total_row = total_rows
 
     def get_pos(self):
         return self.row, self.col
@@ -103,8 +118,5 @@ class Node:
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
 
-    def update_neighbors(self):
-        pass
-
-    def print_(self):
-        print(self.width)
+    def update_neighbors(self, neighbors):
+        self.neighbors = neighbors
