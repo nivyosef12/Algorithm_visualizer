@@ -1,5 +1,7 @@
 # TODO list
 # 1. generate maze
+# 2. restart button
+# 3. another algorithms
 
 import pygame
 from grid import Grid
@@ -66,7 +68,10 @@ def main():
                             grid.update_neighbors(node.row, node.col)
 
                     algorithm = PathAlgorithm(grid.grid, lambda: grid.draw(WIN), start_node, end_node)
-                    algorithm.a_star(h)
+                    if algorithm.a_star(h):
+                        print("success")
+                    else:
+                        print("fail")
 
     pygame.quit()
 
