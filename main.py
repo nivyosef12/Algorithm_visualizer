@@ -51,7 +51,9 @@ def main():
                 # feature for changing start and end position
                 continue
 
-            # TODO elif for space -> start the algorithm
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and not started:
+                    started = True
     pygame.quit()
 
 
