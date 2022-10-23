@@ -82,14 +82,19 @@ def main():
                             grid.update_neighbors(node.row, node.col)
 
                     algorithm = PathAlgorithm(grid.grid, lambda: grid.draw(WIN), start_node, end_node)
-                    if algorithm.bfs():  # algorithm.a_star(h):
-                        print("success")
-                    else:
-                        print("fail")
 
+                    # a star
+                    algorithm.a_star(h)
+
+                    # bfs
                     sleep(3)
                     reset_grid(grid.grid, start_node, end_node)
-                    algorithm.a_star(h)
+                    algorithm.bfs()
+
+                    # dfs
+                    sleep(3)
+                    reset_grid(grid.grid, start_node, end_node)
+                    algorithm.dfs(start_node, set(), {})
 
     pygame.quit()
 
