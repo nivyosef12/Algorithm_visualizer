@@ -22,7 +22,7 @@ class PathAlgorithm:
 
         tie_breaker = 0  # in case of tie in scores take the one with lowest
         priority_queue = PriorityQueue()
-        priority_queue.put((0, tie_breaker, self.start))  # (g_score, tie_breaker, curr_node)
+        priority_queue.put((0, tie_breaker, self.start))  # (f_score, tie_breaker, curr_node)
         nodes_set = {self.start}  # keep track of nodes in the priority queue
         came_from = {}
         g_score = {node: float("inf") for row in self.grid for node in row}
@@ -47,7 +47,7 @@ class PathAlgorithm:
                 return True
 
             for neighbor in curr_node.get_neighbors():
-                temp_g_score = g_score[curr_node]
+                temp_g_score = g_score[curr_node] + 1
                 # updating
                 if temp_g_score < g_score[neighbor]:
                     came_from[neighbor] = curr_node
