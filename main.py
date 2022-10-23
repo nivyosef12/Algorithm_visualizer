@@ -2,6 +2,7 @@
 # 1. generate maze
 # 2. restart button
 # 3. another algorithms
+from time import sleep
 
 import pygame
 from grid import Grid
@@ -17,6 +18,19 @@ def h(p1, p2):
     dx = abs(p1[0] - p2[0])
     dy = abs(p1[1] - p2[1])
     return dx + dy
+
+
+def reset_grid(grid, start, end):
+    for row in grid:
+        for node in row:
+            if node.is_barrier():
+                # do nothing
+                pass
+            else:
+                node.reset()
+
+    start.make_start()
+    end.make_end()
 
 
 def main():
@@ -68,10 +82,14 @@ def main():
                             grid.update_neighbors(node.row, node.col)
 
                     algorithm = PathAlgorithm(grid.grid, lambda: grid.draw(WIN), start_node, end_node)
-                    if algorithm.a_star(h):
+                    if algorithm.bfs():  # algorithm.a_star(h):
                         print("success")
                     else:
                         print("fail")
+
+                    sleep(3)
+                    reset_grid(grid.grid, start_node, end_node)
+                    algorithm.a_star(h)
 
     pygame.quit()
 

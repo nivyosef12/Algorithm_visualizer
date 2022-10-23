@@ -1,5 +1,5 @@
 import pygame
-from queue import PriorityQueue
+from queue import PriorityQueue, Queue
 
 
 class PathAlgorithm:
@@ -68,5 +68,38 @@ class PathAlgorithm:
 
             if curr_node != self.start:
                 curr_node.make_close()
+
+        return False
+
+    def bfs(self):
+
+        queue = Queue()
+        queue.put(self.start)
+        visited = set()
+        came_from = dict()
+
+        while not queue.empty():
+
+            curr_node = queue.get()
+            if curr_node != self.start:
+                curr_node.make_open()
+            visited.add(curr_node)
+            insertions_to_queue = 0
+
+            if curr_node == self.end:
+                self.reconstruct_path(came_from, self.end)
+                return True
+
+            for neighbor in curr_node.get_neighbors():
+                if neighbor not in visited:
+                    insertions_to_queue += 1
+                    queue.put(neighbor)
+                    visited.add(neighbor)
+                    came_from[neighbor] = curr_node
+
+            if insertions_to_queue == 0:
+                curr_node.make_close()
+
+            self.draw_function()
 
         return False
