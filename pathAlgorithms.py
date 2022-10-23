@@ -11,9 +11,12 @@ class PathAlgorithm:
 
     def reconstruct_path(self, came_from, curr):
         while curr in came_from:
-            curr = came_from[curr]
             curr.make_path()
+            curr = came_from[curr]
             self.draw_function()
+
+        self.start.make_path()
+        self.draw_function()
 
     def a_star(self, heuristic_function):
         # g_score -> distance from start node
@@ -53,6 +56,7 @@ class PathAlgorithm:
                     came_from[neighbor] = curr_node
                     g_score[neighbor] = temp_g_score
                     f_score[neighbor] = temp_g_score + heuristic_function(neighbor.get_pos(), self.end.get_pos())
+
                     # if neighbor has not been considered
                     if neighbor not in nodes_set:
                         tie_breaker += 1
