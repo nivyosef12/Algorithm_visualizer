@@ -123,3 +123,35 @@ class PathAlgorithm:
 
         curr_node.make_close()
         return False
+
+    def dijkstra(self, start_node, weights):
+        tie_breaker = 0  # in case of tie in scores take the one with lowest
+        dist = {node: float("inf") for row in self.grid for node in row}
+        dist[start_node] = 0
+        came_from = {}
+        priority_queue = PriorityQueue()
+        priority_queue.put((0, tie_breaker, start_node))
+
+        while not priority_queue.empty():
+
+            curr_node = priority_queue.get()[2]
+
+            if curr_node == self.end:
+                self.reconstruct_path(came_from, self.end)
+                return True
+            # TODO need to prove correctness -> if i_t_q == 0 then make_close()
+            insertions_to_queue = 0
+            for neighbor in curr_node.get_neighbors():
+
+                if dist[neighbor] > dist[curr_node] + weights[neighbor]:  # weights[neighbor] = cost to move to neighbor
+                    insertions_to_queue += 1
+                    neighbor.make_open()
+                    dist[neighbor] = dist[curr_node] + weights[neighbor]  # TODO update()?!
+                    tie_breaker += 1
+                    priority_queue.put((dist[neighbor], tie_breaker, neighbor))
+
+                    came_from[neighbor] = curr_node
+            if insertions_to_queue == 0:
+                curr_node.make_close()
+
+        return False

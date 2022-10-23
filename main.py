@@ -2,6 +2,7 @@
 # 1. generate maze
 # 2. restart button
 # 3. another algorithms
+import random
 from time import sleep
 
 import pygame
@@ -82,10 +83,16 @@ def main():
                             grid.update_neighbors(node.row, node.col)
 
                     algorithm = PathAlgorithm(grid.grid, lambda: grid.draw(WIN), start_node, end_node)
+                    weights = {node: random.randint(1, 5) for row in grid.grid for node in row}
+
+                    # dijkstra
+                    algorithm.dijkstra(start_node, weights)
 
                     # a star
+                    sleep(3)
+                    reset_grid(grid.grid, start_node, end_node)
                     algorithm.a_star(h)
-
+                    '''
                     # bfs
                     sleep(3)
                     reset_grid(grid.grid, start_node, end_node)
@@ -95,6 +102,7 @@ def main():
                     sleep(3)
                     reset_grid(grid.grid, start_node, end_node)
                     algorithm.dfs(start_node, set(), {})
+                    '''
 
     pygame.quit()
 
