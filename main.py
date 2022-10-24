@@ -92,7 +92,7 @@ def main():
                     sleep(3)
                     reset_grid(grid.grid, start_node, end_node)
                     algorithm.a_star(h)
-                    '''
+
                     # bfs
                     sleep(3)
                     reset_grid(grid.grid, start_node, end_node)
@@ -102,7 +102,7 @@ def main():
                     sleep(3)
                     reset_grid(grid.grid, start_node, end_node)
                     algorithm.dfs(start_node, set(), {})
-                    '''
+
 
     pygame.quit()
 

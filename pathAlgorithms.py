@@ -1,3 +1,6 @@
+# TODO list
+# 1.better h function
+
 import pygame
 from queue import PriorityQueue, Queue
 
@@ -136,6 +139,9 @@ class PathAlgorithm:
 
             curr_node = priority_queue.get()[2]
 
+            if curr_node != self.start:
+                curr_node.make_open()
+
             if curr_node == self.end:
                 self.reconstruct_path(came_from, self.end)
                 return True
@@ -145,12 +151,15 @@ class PathAlgorithm:
 
                 if dist[neighbor] > dist[curr_node] + weights[neighbor]:  # weights[neighbor] = cost to move to neighbor
                     insertions_to_queue += 1
-                    neighbor.make_open()
+                    # neighbor.make_open()
                     dist[neighbor] = dist[curr_node] + weights[neighbor]  # TODO update()?!
                     tie_breaker += 1
                     priority_queue.put((dist[neighbor], tie_breaker, neighbor))
 
                     came_from[neighbor] = curr_node
+
+            self.draw_function()
+
             if insertions_to_queue == 0:
                 curr_node.make_close()
 
