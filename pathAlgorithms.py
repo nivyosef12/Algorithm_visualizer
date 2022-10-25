@@ -26,11 +26,11 @@ class PathAlgorithm:
         # h_score -> distance from end node
         # f_score -> g_score + h_score
 
-        tie_breaker = 0  # in case of tie in scores take the one with lowest
+        tie_breaker = 0  # in case of tie in scores take the one with lowest tie_breaker
         priority_queue = PriorityQueue()
         priority_queue.put((0, tie_breaker, self.start))  # (f_score, tie_breaker, curr_node)
         nodes_set = {self.start}  # keep track of nodes in the priority queue
-        came_from = {}
+        came_from = {}  # will be used to reconstruct path
         g_score = {node: float("inf") for row in self.grid for node in row}
         g_score[self.start] = 0
         f_score = {node: float("inf") for row in self.grid for node in row}
@@ -79,19 +79,28 @@ class PathAlgorithm:
         queue = Queue()
         queue.put(self.start)
         visited = set()
-        came_from = dict()
+        came_from = dict()  # will be used to reconstruct path
 
         while not queue.empty():
+            # allowing way out since the algorithm takes over
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
 
             curr_node = queue.get()
             if curr_node != self.start:
                 curr_node.make_open()
+
+            # mark node as visited
+            # TODO mark start node sa visited before while loop and add to visited only in get_neighbors loop
             visited.add(curr_node)
-            insertions_to_queue = 0
 
             if curr_node == self.end:
                 self.reconstruct_path(came_from, self.end)
                 return True
+
+            # used to check how many neighbors curr_node pushed to queue
+            insertions_to_queue = 0
 
             for neighbor in curr_node.get_neighbors():
                 if neighbor not in visited:
@@ -100,6 +109,7 @@ class PathAlgorithm:
                     visited.add(neighbor)
                     came_from[neighbor] = curr_node
 
+            # a leaf if bfs tree
             if insertions_to_queue == 0:
                 curr_node.make_close()
 
@@ -108,7 +118,14 @@ class PathAlgorithm:
         return False
 
     def dfs(self, curr_node, visited, came_from):
+        # allowing way out since the algorithm takes over
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        # draw
         self.draw_function()
+        # mark node as visited
         visited.add(curr_node)
 
         if curr_node != self.start:
@@ -121,22 +138,35 @@ class PathAlgorithm:
         for neighbor in curr_node.get_neighbors():
             if neighbor not in visited:
                 came_from[neighbor] = curr_node
+                # recursive dfs call
                 if self.dfs(neighbor, visited, came_from):
                     return True
 
+        # no path from curr_node to end_node
         curr_node.make_close()
         return False
 
     def dijkstra(self, start_node, weights):
-        tie_breaker = 0  # in case of tie in scores take the one with lowest
+        tie_breaker = 0  # in case of tie in scores take the one with lowest tie_breaker
+
+        # {node: dist} -> dist of node from start node
         dist = {node: float("inf") for row in self.grid for node in row}
         dist[start_node] = 0
-        came_from = {}
+
+        came_from = {}  # will be used to reconstruct path
+
+        # used to pop node with min dist value
         priority_queue = PriorityQueue()
         priority_queue.put((0, tie_breaker, start_node))
 
         while not priority_queue.empty():
 
+            # allowing way out since the algorithm takes over
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+            # get node with min dist value
             curr_node = priority_queue.get()[2]
 
             if curr_node != self.start:
@@ -145,22 +175,26 @@ class PathAlgorithm:
             if curr_node == self.end:
                 self.reconstruct_path(came_from, self.end)
                 return True
+
             # TODO need to prove correctness -> if i_t_q == 0 then make_close()
+            # used to check how many neighbors curr_node pushed to queue
             insertions_to_queue = 0
             for neighbor in curr_node.get_neighbors():
 
                 if dist[neighbor] > dist[curr_node] + weights[neighbor]:  # weights[neighbor] = cost to move to neighbor
+                    # updating dist from start
                     insertions_to_queue += 1
                     # neighbor.make_open()
-                    dist[neighbor] = dist[curr_node] + weights[neighbor]  # TODO update()?!
+                    dist[neighbor] = dist[curr_node] + weights[neighbor]  # TODO update the val for the key or inserting new one?!
                     tie_breaker += 1
+                    # TODO maybe try to update
                     priority_queue.put((dist[neighbor], tie_breaker, neighbor))
 
                     came_from[neighbor] = curr_node
 
-            self.draw_function()
-
             if insertions_to_queue == 0:
                 curr_node.make_close()
+
+            self.draw_function()
 
         return False
