@@ -51,6 +51,8 @@ class SortingAlgorithms:
     def insertion_sort(self):
         for i in range(1, len(self.lst)):
             bar = self.lst[i]
+            bar.make_choose()
+            self.draw_function()
             key = bar.get_height()
 
             j = i - 1
@@ -65,16 +67,17 @@ class SortingAlgorithms:
                 self.lst[j + 1].make_move()
                 self.draw_function()
 
-                time.sleep(0.1)
+                time.sleep(0.05)
                 self.lst[j + 1].set_height(self.lst[j].get_height())
                 self.draw_function()
 
-                time.sleep(0.1)
+                time.sleep(0.05)
                 self.lst[j + 1].make_static()
                 self.draw_function()
 
                 j -= 1
 
             self.lst[j + 1].set_height(key)
+            bar.make_static()
 
         self.draw_function()
