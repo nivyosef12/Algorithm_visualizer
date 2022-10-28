@@ -1,7 +1,7 @@
 # TODO list
 # 1. generate maze
 # 2. restart button
-# 3. another algorithms
+# 3. display performance -> num of nodes scanned, runtime?
 import random
 from time import sleep
 

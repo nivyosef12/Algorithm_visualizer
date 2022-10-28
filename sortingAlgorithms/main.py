@@ -1,3 +1,6 @@
+# TODO
+# 1. display performance -> num of comparisons, num of array accesses, runtime?
+
 import pygame
 import random
 from List import List
