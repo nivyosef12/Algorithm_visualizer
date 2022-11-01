@@ -36,9 +36,11 @@ def main():
 
                     # algorithm.insertion_sort()
 
-                    # algorithm.swapping_sort()
+                    algorithm.swapping_sort()
 
-                    algorithm.bubbleSort()
+                    # algorithm.bubbleSort()
+
+                    # algorithm.quick_sort()
 
     return 0
 

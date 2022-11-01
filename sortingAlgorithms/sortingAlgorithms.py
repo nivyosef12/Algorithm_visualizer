@@ -5,13 +5,13 @@ import time
 class SortingAlgorithms:
 
     def __init__(self, lst, draw):
-        self.lst = lst
+        self.lst = lst  # list of Bar objects
         self.draw_function = draw
 
     # start - inclusive
     # end - exclusive
     # TODO edge cases?
-    def find_min(self, start, end):
+    def __find_min(self, start, end):
         curr_min = self.lst[start].get_height()
         index = start
         for i in range(start + 1, end):
@@ -21,10 +21,15 @@ class SortingAlgorithms:
 
         return curr_min, index
 
+    def __swap(self, i, j):
+        tmp = self.lst[i].get_height()
+        self.lst[i].set_height(self.lst[j].get_height())
+        self.lst[j].set_height(tmp)
+
     def swapping_sort(self):
         lst_len = len(self.lst)
         for i in range(0, lst_len):
-            min_num, min_index = self.find_min(i, lst_len)
+            min_num, min_index = self.__find_min(i, lst_len)
             curr_bar = self.lst[i]
             min_bar = self.lst[min_index]
 
@@ -34,11 +39,10 @@ class SortingAlgorithms:
 
             # draw
             self.draw_function()
-            time.sleep(0.2)
+            time.sleep(0.05)
 
             # swap
-            min_bar.set_height(curr_bar.get_height())
-            curr_bar.set_height(min_num)
+            self.__swap(i, min_index)
 
             # draw
             self.draw_function()
@@ -73,9 +77,7 @@ class SortingAlgorithms:
 
                 # Swap if the element found is greater than the next element
                 if curr_bar.get_height() > next_bar.get_height():
-                    tmp = curr_bar.get_height()
-                    curr_bar.set_height(next_bar.get_height())
-                    next_bar.set_height(tmp)
+                    self.__swap(j, j + 1)
 
                     # draw
                     self.draw_function()
@@ -86,8 +88,6 @@ class SortingAlgorithms:
                 next_bar.make_static()
                 self.draw_function()
                 time.sleep(0.05)
-
-
 
     def insertion_sort(self):
         for i in range(1, len(self.lst)):
@@ -122,3 +122,51 @@ class SortingAlgorithms:
             bar.make_static()
 
         self.draw_function()
+
+    # __partition places the pivot a its correct position in sorted list
+    def __partition(self, low, high):
+        pivot = self.lst[high - 1]  # TODO choose "good" pivot
+        pivot.make_move()
+        i = low - 1
+
+        for j in range(low, high):
+
+            if self.lst[j].get_height() < pivot.get_height():
+                i += 1
+                bar_i = self.lst[i]
+                bar_j = self.lst[j]
+
+                # mark chosen bars and draw
+                bar_i.make_choose()
+                bar_j.make_choose()
+                self.draw_function()
+                time.sleep(0.05)
+
+                # swap
+                self.__swap(i, j)
+
+                # draw after swap
+                self.draw_function()
+                time.sleep(0.05)
+                bar_i.make_static()
+                bar_j.make_static()
+                self.draw_function()
+
+        self.__swap(i + 1, high - 1)
+        pivot.make_static()
+        self.draw_function()
+
+        return i + 1
+
+    def __quick_sort(self, low, high):
+        if low < high:
+            partition_index = self.__partition(low, high)
+            self.__quick_sort(low, partition_index)
+            self.__quick_sort(partition_index + 1, high)
+
+    def quick_sort(self):
+        print("start")
+        self.draw_function()
+        self.__quick_sort(0, len(self.lst))
+        self.draw_function()
+        print("end")

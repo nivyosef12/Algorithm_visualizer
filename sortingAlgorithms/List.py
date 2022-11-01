@@ -1,6 +1,7 @@
 # TODO
 # 1. how to inherit/extend python list class
 # 2. other names to has_swapped(), make_static()
+# 3. in Bar class -> make function set_bar(other): this.bar = other
 
 import pygame
 
