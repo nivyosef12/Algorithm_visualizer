@@ -1,5 +1,6 @@
 # TODO list
 # 1.better h function
+# 2.add visited field to node
 
 import pygame
 from queue import PriorityQueue, Queue
@@ -12,7 +13,7 @@ class PathAlgorithm:
         self.start = start
         self.end = end
 
-    def reconstruct_path(self, came_from, curr):
+    def __reconstruct_path(self, came_from, curr):
         while curr in came_from:
             curr.make_path()
             curr = came_from[curr]
@@ -49,7 +50,7 @@ class PathAlgorithm:
             nodes_set.remove(curr_node)
 
             if curr_node == self.end:
-                self.reconstruct_path(came_from, self.end)
+                self.__reconstruct_path(came_from, self.end)
                 return True
 
             for neighbor in curr_node.get_neighbors():
@@ -95,7 +96,7 @@ class PathAlgorithm:
             visited.add(curr_node)
 
             if curr_node == self.end:
-                self.reconstruct_path(came_from, self.end)
+                self.__reconstruct_path(came_from, self.end)
                 return True
 
             for neighbor in curr_node.get_neighbors():
@@ -130,7 +131,7 @@ class PathAlgorithm:
             curr_node.make_open()
 
         if curr_node == self.end:
-            self.reconstruct_path(came_from, self.end)
+            self.__reconstruct_path(came_from, self.end)
             return True
 
         for neighbor in curr_node.get_neighbors():
@@ -168,7 +169,7 @@ class PathAlgorithm:
             curr_node = priority_queue.get()[2]
 
             if curr_node == self.end:
-                self.reconstruct_path(came_from, self.end)
+                self.__reconstruct_path(came_from, self.end)
                 return True
 
             for neighbor in curr_node.get_neighbors():

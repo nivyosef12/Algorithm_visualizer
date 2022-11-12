@@ -2,6 +2,8 @@
 # 1. generate maze
 # 2. restart button
 # 3. display performance -> num of nodes scanned, runtime?
+# 4. try catch (throws exception when pressing exit button)
+
 import random
 from time import sleep
 
